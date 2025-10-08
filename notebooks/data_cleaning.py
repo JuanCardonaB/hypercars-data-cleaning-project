@@ -45,6 +45,7 @@ class Data_Cleaning:
 
     def engine_cleaning(self):
         initial_nulls = self.df["engine_type"].isnull().sum()
+        self.report["engine_type_initial_nulls"] = initial_nulls
 
         def extract_valid_engine(engine_type: str):
             if pd.isna(engine_type):
