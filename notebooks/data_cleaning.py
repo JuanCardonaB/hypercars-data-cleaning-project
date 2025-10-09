@@ -161,12 +161,17 @@ class Data_Cleaning:
 
         self.df['displacement_l'] = pd.to_numeric(self.df['displacement_l'], errors="coerce")
 
-        mean_displacement = self.df['displacement_l'].mean()
-        self.df['displacement_l'] = self.df['displacement_l'].fillna(mean_displacement)
+        valid_values = self.df['displacement_l'].dropna()
+
+        if len(valid_values) > 0:
+            mean_displacement = valid_values.mean()
+        else:
+            mean_displacement = 4.0
 
         self.df['displacement_l'] = self.df['displacement_l'].apply(
             lambda x: x if 0.8 <= x <= 9.0 else mean_displacement
         )
+        self.df['displacement_l'] = self.df['displacement_l'].fillna(mean_displacement)
 
         print(self.df['displacement_l'])
 
@@ -177,4 +182,4 @@ if __name__ == "__main__":
     data_clean.generate_initial_report()
     # data_clean.engine_cleaning()
     # data_clean.car_name_cleaning()
-    # data_clean.displacement_cleaning()
+    data_clean.displacement_cleaning()
