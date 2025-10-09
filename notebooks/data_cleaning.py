@@ -5,9 +5,9 @@ import warnings
 from pathlib import Path
 from typing import Dict, Any
 
-# TODO Logs en cada funcion
-# TODO Tipar los retornos de las funciones
-# TODO Añadir a los reportes la info de cada funcion
+# TODO Add logs to each function
+# TODO Add type hints for function returns
+# TODO Add function info to reports
 
 logging.basicConfig(
     level=logging.INFO,
