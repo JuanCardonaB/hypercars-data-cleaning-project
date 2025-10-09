@@ -5,6 +5,10 @@ import warnings
 from pathlib import Path
 from typing import Dict, Any
 
+# TODO Add logs to each function
+# TODO Add type hints for function returns
+# TODO Add function info to reports
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
@@ -152,10 +156,30 @@ class Data_Cleaning:
 
         print(self.df["engine_type"])
 
+    def displacement_cleaning(self):
+        initial_nulls = self.df['displacement_l'].isnull().sum()
+
+        self.df['displacement_l'] = pd.to_numeric(self.df['displacement_l'], errors="coerce")
+
+        valid_values = self.df['displacement_l'].dropna()
+
+        if len(valid_values) > 0:
+            mean_displacement = valid_values.mean()
+        else:
+            mean_displacement = 4.0
+
+        self.df['displacement_l'] = self.df['displacement_l'].apply(
+            lambda x: x if 0.8 <= x <= 9.0 else mean_displacement
+        )
+        self.df['displacement_l'] = self.df['displacement_l'].fillna(mean_displacement)
+
+        print(self.df['displacement_l'])
+
 
 if __name__ == "__main__":
     data_clean = Data_Cleaning('./data/raw/HyperCars2019.csv')
     data_clean.load_data()
     data_clean.generate_initial_report()
     # data_clean.engine_cleaning()
-    data_clean.car_name_cleaning()
+    # data_clean.car_name_cleaning()
+    data_clean.displacement_cleaning()
