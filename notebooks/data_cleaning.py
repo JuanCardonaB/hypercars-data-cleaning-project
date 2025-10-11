@@ -135,11 +135,10 @@ class Data_Cleaning:
             "duplicates": duplicates
         }
 
-    def engine_cleaning(self):
+    def engine_cleaning(self) -> None:
         initial_nulls = self.df["engine_type"].isnull().sum()
-        self.report["engine_type_initial_nulls"] = initial_nulls
 
-        def extract_valid_engine(engine_type: str):
+        def extract_valid_engine(engine_type: str) -> str:
             if pd.isna(engine_type):
                 return None
             
@@ -158,9 +157,11 @@ class Data_Cleaning:
             lambda engine: extract_valid_engine(engine)
         )
 
-        print(self.df["engine_type"])
+        self.report["engine"] = {
+            "initial_nulls": initial_nulls
+        }
 
-    def displacement_cleaning(self):
+    def displacement_cleaning(self) -> None:
         initial_nulls = self.df['displacement_l'].isnull().sum()
 
         self.df['displacement_l'] = pd.to_numeric(self.df['displacement_l'], errors="coerce")
@@ -177,7 +178,9 @@ class Data_Cleaning:
         )
         self.df['displacement_l'] = self.df['displacement_l'].fillna(mean_displacement)
 
-        print(self.df['displacement_l'])
+        self.report["displacement"] = {
+            "initial_nulls": initial_nulls
+        }
 
 
 if __name__ == "__main__":
