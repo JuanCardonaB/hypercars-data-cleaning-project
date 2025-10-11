@@ -74,10 +74,11 @@ class Data_Cleaning:
         logger.info("Initial data report generated")
         return report
 
-    def car_name_cleaning(self):
+    def car_name_cleaning(self) -> None:
         intial_nulls = self.df['car_name'].isnull().sum()
+        duplicates = self.df["car_name"].duplicated().sum()
 
-        def format_car_name(car_name: str):
+        def format_car_name(car_name: str) -> str:
             if pd.isna(car_name):
                 return None
             
@@ -129,7 +130,10 @@ class Data_Cleaning:
             lambda car_name: format_car_name(car_name)
         )
 
-        print(self.df["car_name"])
+        self.report["car_name"] = {
+            "initial_nulls": intial_nulls,
+            "duplicates": duplicates
+        }
 
     def engine_cleaning(self):
         initial_nulls = self.df["engine_type"].isnull().sum()
